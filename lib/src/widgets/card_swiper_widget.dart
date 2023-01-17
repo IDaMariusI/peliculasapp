@@ -11,9 +11,6 @@ class CardSwiper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //peliculas![index].uniqueId = '${peliculas![index].id}-tarjeta';
-    //() => Navigator.pushNamed(context, 'detalle', arguments: peliculas![index])
-
     return CarouselSlider.builder(
       itemCount: movies.length,
       itemBuilder: (context, index, realIndex) =>
