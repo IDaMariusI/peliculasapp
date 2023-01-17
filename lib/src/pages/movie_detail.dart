@@ -21,10 +21,7 @@ class MovieDetail extends StatelessWidget {
                 SizedBox(height: 10.0),
                 _posterTitle(context, movie),
                 _description(movie),
-                _description(movie),
-                _description(movie),
-                _description(movie),
-                _createCasting(movie)
+                _createCasting(movie),
               ],
             ),
           ),
@@ -42,9 +39,16 @@ class MovieDetail extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text(
-          movie.title!,
-          style: TextStyle(color: Colors.white, fontSize: 16.0),
+        title: FadeIn(
+          delay: Duration(milliseconds: 300),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              movie.title!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 16.0),
+            ),
+          ),
         ),
         background: Hero(
           tag: movie.uniqueIdBanner,
@@ -79,18 +83,27 @@ class MovieDetail extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(movie.title!,
-                    style: Theme.of(context).textTheme.titleSmall,
-                    overflow: TextOverflow.ellipsis),
-                Text(movie.originalTitle!,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    overflow: TextOverflow.ellipsis),
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.star_border),
-                    Text(movie.voteAverage.toString(),
-                        style: Theme.of(context).textTheme.headlineSmall)
-                  ],
+                FadeIn(
+                  delay: Duration(milliseconds: 200),
+                  child: Text(movie.title!,
+                      style: Theme.of(context).textTheme.titleSmall,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                FadeIn(
+                  delay: Duration(milliseconds: 400),
+                  child: Text(movie.originalTitle!,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                FadeIn(
+                  delay: Duration(milliseconds: 600),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.star_border),
+                      Text(movie.voteAverage.toString(),
+                          style: Theme.of(context).textTheme.headlineSmall)
+                    ],
+                  ),
                 ),
               ],
             ),
