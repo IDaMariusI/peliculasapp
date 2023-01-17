@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:peliculas/src/models/pelicula_model.dart';
+
+import 'package:peliculas/src/models/movies_model.dart';
 
 class MovieHorizontal extends StatelessWidget {
-  final List<Pelicula>? peliculas;
-  final Function siguientePagina;
+  final List<Movie>? movies;
+  final Function nextPage;
 
-  MovieHorizontal({required this.peliculas, required this.siguientePagina});
+  MovieHorizontal({required this.movies, required this.nextPage});
 
   final _pageController =
       new PageController(initialPage: 1, viewportFraction: 0.3);
@@ -17,7 +18,7 @@ class MovieHorizontal extends StatelessWidget {
     _pageController.addListener(() {
       if (_pageController.position.pixels >=
           _pageController.position.maxScrollExtent - 200) {
-        siguientePagina();
+        nextPage();
       }
     });
 
@@ -26,26 +27,23 @@ class MovieHorizontal extends StatelessWidget {
       child: PageView.builder(
         pageSnapping: false,
         controller: _pageController,
-        // children: _tarjetas(context),
-        itemCount: peliculas!.length,
-        itemBuilder: (context, i) => _tarjeta(context, peliculas![i]),
+        itemCount: movies!.length,
+        itemBuilder: (context, i) => _card(context, movies![i]),
       ),
     );
   }
 
-  Widget _tarjeta(BuildContext context, Pelicula pelicula) {
-    pelicula.uniqueId = '${pelicula.id}-poster';
-
-    final tarjeta = Container(
+  Widget _card(BuildContext context, Movie movie) {
+    final card = Container(
       margin: EdgeInsets.only(right: 15.0),
       child: Column(
         children: <Widget>[
           Hero(
-            tag: pelicula.uniqueId,
+            tag: movie.uniqueId,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: FadeInImage(
-                image: NetworkImage(pelicula.getPosterImg()),
+                image: NetworkImage(movie.getPosterImg()),
                 placeholder: AssetImage('assets/img/no-image.jpg'),
                 fit: BoxFit.cover,
                 height: 160.0,
@@ -54,7 +52,7 @@ class MovieHorizontal extends StatelessWidget {
           ),
           SizedBox(height: 5.0),
           Text(
-            pelicula.title!,
+            movie.title!,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodySmall,
           )
@@ -63,9 +61,9 @@ class MovieHorizontal extends StatelessWidget {
     );
 
     return GestureDetector(
-      child: tarjeta,
+      child: card,
       onTap: () {
-        Navigator.pushNamed(context, 'detalle', arguments: pelicula);
+        Navigator.pushNamed(context, 'details', arguments: movie);
       },
     );
   }

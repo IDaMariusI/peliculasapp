@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'package:peliculas/src/models/pelicula_model.dart';
+import 'package:peliculas/src/models/movies_model.dart';
 
 class CardSwiper extends StatelessWidget {
-  final List<Pelicula> peliculas;
+  final List<Movie> movies;
 
-  CardSwiper({required this.peliculas});
+  CardSwiper({required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -15,30 +15,35 @@ class CardSwiper extends StatelessWidget {
     //() => Navigator.pushNamed(context, 'detalle', arguments: peliculas![index])
 
     return CarouselSlider.builder(
-      itemCount: peliculas.length,
+      itemCount: movies.length,
       itemBuilder: (context, index, realIndex) =>
-          MoviePosterImage(pelicula: peliculas[index]),
+          MoviePosterImage(movie: movies[index]),
       options: CarouselOptions(
         autoPlay: true,
         aspectRatio: 2.0,
         enlargeCenterPage: true,
-        
       ),
     );
   }
 }
 
 class MoviePosterImage extends StatelessWidget {
-  final Pelicula pelicula;
+  final Movie movie;
 
-  const MoviePosterImage({Key? key, required this.pelicula}) : super(key: key);
+  const MoviePosterImage({Key? key, required this.movie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage(
-      image: NetworkImage(pelicula.getPosterImg()),
-      placeholder: AssetImage('assets/img/no-image.jpg'),
-      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, 'details', arguments: movie),
+      child: Hero(
+        tag: movie.uniqueIdBanner,
+        child: FadeInImage(
+          image: NetworkImage(movie.getBackgroundImg()),
+          placeholder: AssetImage('assets/img/loading.gif'),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

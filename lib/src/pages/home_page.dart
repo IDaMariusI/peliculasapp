@@ -1,55 +1,56 @@
 import 'package:flutter/material.dart';
 
-import 'package:peliculas/src/models/pelicula_model.dart';
-import 'package:peliculas/src/providers/peliculas_provider.dart';
+import 'package:peliculas/src/models/movies_model.dart';
+import 'package:peliculas/src/providers/movies_provider.dart';
 import 'package:peliculas/src/search/search_delegate.dart';
 import 'package:peliculas/src/widgets/card_swiper_widget.dart';
 import 'package:peliculas/src/widgets/movie_horizontal.dart';
 
 class HomePage extends StatelessWidget {
-  final peliculasProvider = new PeliculasProvider();
+  final moviesProvider = new MoviesProvider();
 
   @override
   Widget build(BuildContext context) {
-    peliculasProvider.getPopulares();
+    moviesProvider.getPopular();
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          title: Text('Películas en cines'),
-          backgroundColor: Colors.indigoAccent,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: DataSearch(),
-                  // query: 'Hola'
-                );
-              },
-            )
-          ],
-        ),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                _swiperTarjetas(),
-                _footer(context),
-              ],
-            ),
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text('In Theaters'),
+        backgroundColor: Colors.indigoAccent,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: DataSearch(),
+                // query: 'Hola'
+              );
+            },
           ),
-        ));
+        ],
+      ),
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _cardsSwiper(),
+              _footer(context),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _swiperTarjetas() {
+  Widget _cardsSwiper() {
     return FutureBuilder(
-      future: peliculasProvider.getEnCines(),
-      builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+      future: moviesProvider.getOnTheaters(),
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
         if (snapshot.hasData) {
-          return CardSwiper(peliculas: snapshot.data!);
+          return CardSwiper(movies: snapshot.data!);
         } else {
           return Container(
             height: 400.0,
@@ -70,17 +71,17 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           Container(
               padding: EdgeInsets.only(left: 20.0),
-              child: Text('Populares',
+              child: Text('Popular',
                   style: Theme.of(context).textTheme.headlineSmall)),
           SizedBox(height: 5.0),
           StreamBuilder(
-            stream: peliculasProvider.popularesStream,
+            stream: moviesProvider.popularStream,
             builder:
-                (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+                (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
               if (snapshot.hasData) {
                 return MovieHorizontal(
-                  peliculas: snapshot.data,
-                  siguientePagina: peliculasProvider.getPopulares,
+                  movies: snapshot.data,
+                  nextPage: moviesProvider.getPopular,
                 );
               } else {
                 return Center(
